@@ -25,7 +25,7 @@ public final class MainActivity extends Activity {
     private void showGate() {
         unlocked = false; launchedPrompt = false;
         LinearLayout root = new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setGravity(Gravity.CENTER_HORIZONTAL);
-        root.setPadding(dp(28), dp(56), dp(28), dp(28)); root.setBackgroundColor(Color.rgb(11,16,32));
+        SystemBarInsets.apply(root, dp(28), dp(32), dp(28), dp(16)); root.setBackgroundColor(Color.rgb(11,16,32));
         TextView mark = text("✦", 52, Color.rgb(50,214,160)); mark.setGravity(Gravity.CENTER); root.addView(mark, lp(-1, 74));
         TextView title = text("LUMA VAULT", 28, Color.WHITE); title.setGravity(Gravity.CENTER); title.setLetterSpacing(.14f); root.addView(title, lp(-1, 52));
         TextView sub = text(pins.isConfigured() ? "歡迎回來，解鎖您的私人保險庫" : "建立只屬於您的離線安全空間", 14, Color.rgb(157,169,202));

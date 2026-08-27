@@ -28,3 +28,7 @@ Android Keystore ──AES key──> AES-256-GCM ──> encrypted local vault
 ## Update checks
 
 `UpdateChecker` 使用 HTTPS 呼叫 GitHub 的 latest release endpoint，讀取 `tag_name`、release body 與 APK 的 `browser_download_url`。檢查在背景執行；只有使用者確認更新後，才以系統瀏覽器開啟 GitHub APK 下載連結。
+
+## Adaptive system bars
+
+`SystemBarInsets` 在 Android 15（API 35）全面螢幕強制生效時讀取 `systemBars` 與 `displayCutout` 的實際安全範圍，將狀態列、瀏海、手勢列或三鍵導覽列的寬高動態加入根畫面 padding。舊版 Android 繼續使用系統原有的非全面螢幕配置，避免重複留白。

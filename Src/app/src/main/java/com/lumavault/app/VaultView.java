@@ -25,7 +25,7 @@ final class VaultView extends LinearLayout {
 
     VaultView(MainActivity context, PinManager pins) {
         super(context); activity=context; this.pins=pins; store=new SecureStore(context);
-        setOrientation(VERTICAL); setBackgroundColor(ink);
+        setOrientation(VERTICAL); setBackgroundColor(ink); SystemBarInsets.apply(this,0,0,0,0);
         LinearLayout header=new LinearLayout(context);header.setGravity(Gravity.CENTER_VERTICAL);header.setPadding(dp(20),dp(12),dp(12),dp(4));
         LinearLayout brand=new LinearLayout(context);brand.setOrientation(VERTICAL);
         TextView eyebrow=txt("LUMA VAULT",11,mint);eyebrow.setLetterSpacing(.16f);brand.addView(eyebrow,lp(-1,22));
