@@ -6,7 +6,7 @@
   [![Android](https://img.shields.io/badge/Android-9%2B-3DDC84?logo=android&logoColor=white)](https://developer.android.com/)
   [![API](https://img.shields.io/badge/API-28%2B-5865F2)](https://developer.android.com/about/versions/pie)
   [![License](https://img.shields.io/badge/License-MIT-32D6A0.svg)](LICENSE)
-  [![Release](https://img.shields.io/badge/release-v1.0.0-32D6A0)](../../releases/latest)
+  [![Release](https://img.shields.io/badge/release-v1.0.0-32D6A0)](https://github.com/git-goldxander/Luma-Vault-Android/releases/latest)
 </div>
 
 Luma Vault 是一款完全離線的 Android 密碼管理 App。它不要求網路權限、不含廣告與追蹤程式，所有帳號資料都以 Android Keystore 管理的金鑰加密後保存在裝置內。
@@ -30,7 +30,7 @@ Luma Vault 是一款完全離線的 Android 密碼管理 App。它不要求網�
 
 ## 📦 安裝
 
-1. 前往 [Releases](../../releases/latest)。
+1. 前往 [Releases](https://github.com/git-goldxander/Luma-Vault-Android/releases/latest)。
 2. 下載 `Luma_Vault-v1.0.0.apk`。
 3. 在 Android 裝置上開啟 APK；若系統提示，允許目前的檔案管理器安裝未知來源 App。
 4. 第一次啟動時建立至少 6 個字元的主密碼。
