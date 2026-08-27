@@ -1,0 +1,38 @@
+name: Android CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+          cache-dependency-path: Src/*.gradle
+
+      - name: Grant execute permission
+        run: chmod +x Src/gradlew
+
+      - name: Lint and build
+        working-directory: Src
+        run: ./gradlew lint assembleDebug --stacktrace
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Luma-Vault-debug
+          path: Src/app/build/outputs/apk/debug/app-debug.apk

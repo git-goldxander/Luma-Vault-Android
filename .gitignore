@@ -1,0 +1,23 @@
+# Local signing keys — never commit
+.local-signing/
+*.jks
+*.keystore
+
+# Android / Gradle
+.gradle/
+**/build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Packaged artifacts belong in GitHub Releases
+output/
+release/
+
+# IDE / OS
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+desktop.ini
