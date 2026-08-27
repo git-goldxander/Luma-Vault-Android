@@ -6,7 +6,7 @@
   [![Android](https://img.shields.io/badge/Android-9%2B-3DDC84?logo=android&logoColor=white)](https://developer.android.com/)
   [![API](https://img.shields.io/badge/API-28%2B-5865F2)](https://developer.android.com/about/versions/pie)
   [![License](https://img.shields.io/badge/License-MIT-32D6A0.svg)](LICENSE)
-  [![Release](https://img.shields.io/badge/release-v1.1.1-32D6A0)](https://github.com/git-goldxander/Luma-Vault-Android/releases/latest)
+  [![Release](https://img.shields.io/badge/release-v1.2.0-32D6A0)](https://github.com/git-goldxander/Luma-Vault-Android/releases/latest)
 </div>
 
 Luma Vault 是一款以離線保險庫為核心的 Android 密碼管理 App。它不含廣告與追蹤程式，所有帳號資料都以 Android Keystore 管理的金鑰加密後保存在裝置內；網路僅在使用者主動檢查 GitHub 更新時使用。
@@ -24,6 +24,8 @@ Luma Vault 是一款以離線保險庫為核心的 Android 密碼管理 App。�
 | ⏱️ 自動上鎖 | App 進入背景兩分鐘後自動鎖定 |
 | 🔄 安全更新檢查 | 手動比對 GitHub 最新版本，確認後才開啟 APK 下載 |
 | 📱 全螢幕相容 | 動態避開狀態列、瀏海、手勢列與三鍵導覽列 |
+| 💾 加密備份 | 匯出／匯入可攜式 `.lvault` 備份，可選合併或取代 |
+| 📲 QR 手機轉移 | 一次性 QR 轉移碼、系統分享，以及轉移後保留／刪除選項 |
 
 ## 🎨 設計
 
@@ -32,7 +34,7 @@ Luma Vault 是一款以離線保險庫為核心的 Android 密碼管理 App。�
 ## 📦 安裝
 
 1. 前往 [Releases](https://github.com/git-goldxander/Luma-Vault-Android/releases/latest)。
-2. 下載最新的 `Luma_Vault-v1.1.1.apk`。
+2. 下載最新的 `Luma_Vault-v1.2.0.apk`。
 3. 在 Android 裝置上開啟 APK；若系統提示，允許目前的檔案管理器安裝未知來源 App。
 4. 第一次啟動時建立至少 6 個字元的主密碼。
 
@@ -76,6 +78,7 @@ Luma_Vault/
 - 保險庫使用 AES-256-GCM 認證加密，每次儲存都產生新的 IV。
 - 寫入採暫存檔同步落盤後再取代正式檔案，降低資料損壞風險。
 - Android 備份與裝置轉移已停用；網路只用於手動讀取 GitHub Release 公開資訊。
+- 可攜式備份使用獨立密碼、PBKDF2-HMAC-SHA256 與 AES-256-GCM，不匯出 Android Keystore 金鑰。
 
 更多細節請參閱 [架構文件](docs/ARCHITECTURE.md)。
 

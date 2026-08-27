@@ -13,7 +13,7 @@ import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-final class VaultView extends LinearLayout {
+final class VaultView extends LinearLayout implements BackupManager.Host {
     private final MainActivity activity;
     private final PinManager pins;
     private final SecureStore store;
@@ -129,9 +129,19 @@ final class VaultView extends LinearLayout {
         TextView guide=txt("Luma Vault 將帳號資料加密保存在此裝置。您可以搜尋、分類、收藏項目，並使用安全中心檢查弱密碼。\n\n更新檢查只會向 GitHub 讀取最新版本資訊，不會上傳保險庫或任何密碼。",13,Color.rgb(55,65,90));
         guide.setPadding(0,dp(8),0,dp(10));box.addView(guide,lp(-1,128));
         Button update=primary("檢查 GitHub 更新");box.addView(update,lp(-1,52));
+        Button data=ghost("資料備份與手機轉移");LayoutParams dataParams=lp(-1,52);dataParams.topMargin=dp(8);box.addView(data,dataParams);
         AlertDialog d=new AlertDialog.Builder(activity).setView(box).setNegativeButton("關閉",null).create();
         update.setOnClickListener(v->{d.dismiss();UpdateChecker.check(activity);});d.show();
+        data.setOnClickListener(v->{d.dismiss();activity.openDataManager(this);});
     }
+
+    @Override public ArrayList<VaultItem> snapshot(){return new ArrayList<>(items);}
+    @Override public void applyImport(ArrayList<VaultItem> imported,boolean replace){
+        if(replace)items.clear();
+        LinkedHashMap<String,VaultItem> merged=new LinkedHashMap<>();for(VaultItem item:items)merged.put(item.id,item);for(VaultItem item:imported)merged.put(item.id,item);
+        items.clear();items.addAll(merged.values());save();render();
+    }
+    @Override public void deleteAfterTransfer(){items.clear();save();render();activity.toast("舊手機的保險庫資料已刪除");}
 
     private View metric(String a,String b,int color){LinearLayout line=new LinearLayout(activity);line.setGravity(Gravity.CENTER_VERTICAL);line.addView(txt(a,14,muted),new LayoutParams(0,dp(46),1));TextView val=txt(b,16,color);val.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);line.addView(val,lp(100,46));return line;}
     private int score(){if(items.isEmpty())return 0;int sum=0;HashSet<String>s=new HashSet<>();for(VaultItem i:items){sum+=i.strength();if(!s.add(i.password))sum-=20;}return Math.max(0,Math.min(100,sum/items.size()));}

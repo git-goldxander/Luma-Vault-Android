@@ -4,7 +4,8 @@
 
 | Version | Supported |
 | --- | --- |
-| 1.1.x | ✅ |
+| 1.2.x | ✅ |
+| 1.1.x | 安全修正支援 |
 | 1.0.x | 安全修正支援 |
 
 ## Reporting a vulnerability

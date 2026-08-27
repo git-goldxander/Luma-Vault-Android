@@ -1,6 +1,7 @@
 package com.lumavault.app;
 
 import android.app.*;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.hardware.biometrics.BiometricManager;
@@ -14,12 +15,15 @@ import android.widget.*;
 public final class MainActivity extends Activity {
     private PinManager pins;
     private boolean unlocked, launchedPrompt;
+    private VaultView currentVault;
+    private BackupManager backupManager;
+    private String pendingTransferCode;
     private final Handler lockHandler = new Handler(Looper.getMainLooper());
     private final Runnable delayedLock = () -> { if (unlocked) showGate(); };
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state); getWindow().setStatusBarColor(Color.rgb(11,16,32));
-        pins = new PinManager(this); showGate();
+        pins = new PinManager(this); readTransferCode(getIntent()); showGate();
     }
 
     private void showGate() {
@@ -69,6 +73,7 @@ public final class MainActivity extends Activity {
         if (!unlocked && pins != null && pins.isConfigured() && pins.biometricEnabled() && !launchedPrompt) {
             launchedPrompt = true; new Handler(Looper.getMainLooper()).postDelayed(this::biometric, 250);
         }
+        if (backupManager != null) backupManager.onResume();
     }
 
     @Override protected void onStop() {
@@ -95,7 +100,25 @@ public final class MainActivity extends Activity {
         return fm!=null && fm.isHardwareDetected() && fm.hasEnrolledFingerprints();
     }
 
-    private void unlock() { unlocked=true; setContentView(new VaultView(this, pins)); }
+    private void unlock() {
+        unlocked=true; currentVault=new VaultView(this,pins);setContentView(currentVault);
+        if(pendingTransferCode!=null){String code=pendingTransferCode;pendingTransferCode=null;
+            new Handler(Looper.getMainLooper()).postDelayed(()->{backupManager=new BackupManager(this,currentVault);backupManager.startImportWithCode(code);},500);}
+    }
+    void openDataManager(VaultView vault){backupManager=new BackupManager(this,vault);backupManager.showMenu();}
+
+    @Override protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        if(backupManager!=null&&backupManager.onActivityResult(requestCode,resultCode,data))return;
+        super.onActivityResult(requestCode,resultCode,data);
+    }
+
+    @Override protected void onNewIntent(Intent intent){super.onNewIntent(intent);setIntent(intent);readTransferCode(intent);
+        if(unlocked&&currentVault!=null&&pendingTransferCode!=null){String code=pendingTransferCode;pendingTransferCode=null;backupManager=new BackupManager(this,currentVault);backupManager.startImportWithCode(code);}}
+
+    private void readTransferCode(Intent intent){
+        if(intent==null||intent.getData()==null)return;android.net.Uri uri=intent.getData();
+        if("lumavault".equals(uri.getScheme())&&"transfer".equals(uri.getHost()))pendingTransferCode=uri.getQueryParameter("code");
+    }
     void lockNow() { showGate(); }
     void toast(String s){Toast.makeText(this,s,Toast.LENGTH_SHORT).show();}
     int dp(int v){return Math.round(v*getResources().getDisplayMetrics().density);}
