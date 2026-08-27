@@ -11,7 +11,7 @@ final class PinManager {
     private final SharedPreferences prefs;
     PinManager(Context c) { prefs = c.getSharedPreferences("luma_security", Context.MODE_PRIVATE); }
     boolean isConfigured() { return prefs.contains("pin_hash"); }
-    boolean biometricEnabled() { return prefs.getBoolean("biometric", false); }
+    boolean biometricEnabled() { return prefs.getBoolean("biometric", true); }
     void setBiometric(boolean enabled) { prefs.edit().putBoolean("biometric", enabled).apply(); }
     void create(String pin) throws Exception {
         byte[] salt = new byte[24]; new SecureRandom().nextBytes(salt);

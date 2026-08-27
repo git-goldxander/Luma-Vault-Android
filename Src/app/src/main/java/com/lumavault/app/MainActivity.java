@@ -41,6 +41,14 @@ public final class MainActivity extends Activity {
             confirm.setBackground(round(Color.rgb(24,33,62),16)); LinearLayout.LayoutParams cp = lp(-1,58); cp.topMargin=dp(12); root.addView(confirm,cp);
         }
         Button go = button(pins.isConfigured() ? "解鎖保險庫" : "建立安全空間"); LinearLayout.LayoutParams bp=lp(-1,58);bp.topMargin=dp(18);root.addView(go,bp);
+        if (pins.isConfigured() && pins.biometricEnabled() && canAuthenticate()) {
+            TextView or = text("或", 12, Color.rgb(104,118,150)); or.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams op=lp(-1,34);op.topMargin=dp(4);root.addView(or,op);
+            Button fingerprint = new Button(this); fingerprint.setText("使用指紋登入"); fingerprint.setTextColor(Color.rgb(50,214,160));
+            fingerprint.setTextSize(15); fingerprint.setAllCaps(false); fingerprint.setCompoundDrawablePadding(dp(8));
+            GradientDrawable fingerprintBg=round(Color.TRANSPARENT,16);fingerprintBg.setStroke(dp(1),Color.rgb(50,214,160));fingerprint.setBackground(fingerprintBg);
+            fingerprint.setOnClickListener(v->{launchedPrompt=true;biometric();});root.addView(fingerprint,lp(-1,54));
+        }
         TextView privacy = text("100% 離線  •  AES-256 加密  •  不含廣告", 12, Color.rgb(104,118,150)); privacy.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams pp=lp(-1,48);pp.topMargin=dp(18);root.addView(privacy,pp); setContentView(root);
         go.setOnClickListener(v -> {
@@ -49,7 +57,7 @@ public final class MainActivity extends Activity {
                 if (!pins.isConfigured()) {
                     if (value.length()<6) { toast("主密碼至少需要 6 個字元"); return; }
                     if (!value.equals(confirm.getText().toString())) { toast("兩次輸入不一致"); return; }
-                    pins.create(value); unlock();
+                    pins.create(value); pins.setBiometric(canAuthenticate()); unlock();
                 } else if (pins.verify(value)) unlock(); else { toast("主密碼不正確"); pin.setText(""); }
             } catch (Exception e) { toast("安全驗證失敗"); }
         });
