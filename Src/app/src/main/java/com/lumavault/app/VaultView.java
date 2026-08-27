@@ -30,7 +30,8 @@ final class VaultView extends LinearLayout {
         LinearLayout brand=new LinearLayout(context);brand.setOrientation(VERTICAL);
         TextView eyebrow=txt("LUMA VAULT",11,mint);eyebrow.setLetterSpacing(.16f);brand.addView(eyebrow,lp(-1,22));
         brand.addView(txt("我的保險庫",27,Color.WHITE),lp(-1,42));header.addView(brand,new LayoutParams(0,dp(68),1));
-        Button shield=ghost("安全中心");shield.setOnClickListener(v->security());header.addView(shield,lp(92,42));addView(header,lp(-1,84));
+        Button help=ghost("說明");help.setOnClickListener(v->help());header.addView(help,lp(66,42));
+        Button shield=ghost("安全中心");shield.setOnClickListener(v->security());LayoutParams hp=lp(92,42);hp.leftMargin=dp(6);header.addView(shield,hp);addView(header,lp(-1,84));
 
         search=new EditText(context);search.setHint("搜尋帳號、網站或分類…");search.setHintTextColor(Color.rgb(103,117,151));search.setTextColor(Color.WHITE);
         search.setTextSize(15);search.setSingleLine();search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);search.setPadding(dp(18),0,dp(18),0);search.setBackground(round(panel,16));
@@ -120,6 +121,16 @@ final class VaultView extends LinearLayout {
         Switch bio=new Switch(activity);bio.setText("使用生物辨識快速解鎖");bio.setTextColor(Color.WHITE);bio.setChecked(pins.biometricEnabled());bio.setOnCheckedChangeListener((b,on)->pins.setBiometric(on));box.addView(bio,lp(-1,58));
         TextView note=txt("資料僅儲存在此裝置，採 Android Keystore 與 AES-256-GCM 加密。",12,muted);note.setPadding(0,dp(8),0,0);box.addView(note,lp(-1,64));
         new AlertDialog.Builder(activity).setView(box).setNegativeButton("立即上鎖",(d,w)->activity.lockNow()).setPositiveButton("完成",null).show();
+    }
+
+    private void help(){
+        LinearLayout box=dialogBox();box.addView(dialogTitle("說明與更新"));
+        box.addView(metric("目前版本","v"+BuildConfig.VERSION_NAME,mint));
+        TextView guide=txt("Luma Vault 將帳號資料加密保存在此裝置。您可以搜尋、分類、收藏項目，並使用安全中心檢查弱密碼。\n\n更新檢查只會向 GitHub 讀取最新版本資訊，不會上傳保險庫或任何密碼。",13,Color.rgb(55,65,90));
+        guide.setPadding(0,dp(8),0,dp(10));box.addView(guide,lp(-1,128));
+        Button update=primary("檢查 GitHub 更新");box.addView(update,lp(-1,52));
+        AlertDialog d=new AlertDialog.Builder(activity).setView(box).setNegativeButton("關閉",null).create();
+        update.setOnClickListener(v->{d.dismiss();UpdateChecker.check(activity);});d.show();
     }
 
     private View metric(String a,String b,int color){LinearLayout line=new LinearLayout(activity);line.setGravity(Gravity.CENTER_VERTICAL);line.addView(txt(a,14,muted),new LayoutParams(0,dp(46),1));TextView val=txt(b,16,color);val.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);line.addView(val,lp(100,46));return line;}

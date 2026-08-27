@@ -16,7 +16,7 @@ Master password ──PBKDF2──> verification hash
 Android Keystore ──AES key──> AES-256-GCM ──> encrypted local vault
 ```
 
-主密碼本身不會寫入磁碟。保險庫資料不會離開裝置，App 也未要求網路權限。
+主密碼本身不會寫入磁碟，保險庫資料不會離開裝置。網路功能與保險庫完全分離，只在使用者點選「檢查 GitHub 更新」時讀取公開 Release JSON。
 
 ## Storage guarantees
 
@@ -24,3 +24,7 @@ Android Keystore ──AES key──> AES-256-GCM ──> encrypted local vault
 - 加密資料包含認證標籤，可偵測內容遭竄改。
 - 寫入先完成暫存檔並同步，再取代正式保險庫檔案。
 - Android cloud backup、full backup 與 device transfer 均停用。
+
+## Update checks
+
+`UpdateChecker` 使用 HTTPS 呼叫 GitHub 的 latest release endpoint，讀取 `tag_name`、release body 與 APK 的 `browser_download_url`。檢查在背景執行；只有使用者確認更新後，才以系統瀏覽器開啟 GitHub APK 下載連結。
